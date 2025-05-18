@@ -1,12 +1,36 @@
 import "@mantine/core/styles.css";
-import { AppShell, Burger, Group, MantineProvider, Skeleton } from "@mantine/core";
+import {
+  AppShell,
+  Burger,
+  Group,
+  MantineProvider,
+  NavLink,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { theme } from "./theme";
+import { IconDashboard, IconHistory, IconGavel } from "@tabler/icons-react";
+import { useState } from "react";
+import RulesMain from "./Components/Rules/RulesMain";
 
-//const navLinks = [""]
+const navLinks = [
+  {
+    label: "Home",
+    leftSection: <IconDashboard size={16} stroke={1.5} />,
+  },
+  {
+    label: "History",
+    leftSection: <IconHistory size={16} stroke={1.5} />,
+  },
+  {
+    label: "Rules",
+    leftSection: <IconGavel size={16} stroke={1.5} />,
+  },
+];
 
 export default function App() {
   const [opened, { toggle }] = useDisclosure();
+  const [activePage, setActivePage] = useState("Home");
+
   return (
     <MantineProvider theme={theme}>
       <AppShell
@@ -30,14 +54,23 @@ export default function App() {
           </Group>
         </AppShell.Header>
         <AppShell.Navbar p="md">
-          Navbar
-          {Array(15)
-            .fill(0)
-            .map((_, index) => (
-              <Skeleton key={index} h={28} mt="sm" animate={false} />
-            ))}
+          {navLinks.map(({ label, leftSection }) => {
+            return (
+              <NavLink
+                label={label}
+                leftSection={leftSection}
+                key={label}
+                active={activePage === label}
+                onClick={() => {
+                  setActivePage(label);
+                }}
+              />
+            );
+          })}
         </AppShell.Navbar>
-        <AppShell.Main>Main</AppShell.Main>
+        <AppShell.Main>
+          <RulesMain />
+        </AppShell.Main>
       </AppShell>
     </MantineProvider>
   );
